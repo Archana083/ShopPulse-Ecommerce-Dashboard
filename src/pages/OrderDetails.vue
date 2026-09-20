@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ArrowLeft, Package, User, CreditCard, CheckCircle2, Circle, Truck } from 'lucide-vue-next'
+import { ArrowLeft, Package, User, CreditCard, CheckCircle2, Circle, Truck, RefreshCw } from 'lucide-vue-next'
+import type { Order } from '../types/ecommerce'
 import { useShopStore } from '../stores/shopStore'
 const route=useRoute(); const router=useRouter(); const store=useShopStore()
 const order=computed(()=>store.orders.find(o=>o.id===route.params.id))
@@ -11,11 +12,13 @@ const money=(n:number)=>'₹'+n.toLocaleString('en-IN')
 const steps=['Pending','Processing','Shipped','Delivered']
 const stepIndex=computed(()=>{const s=order.value?.status??'Pending'; const i=steps.indexOf(s); return i<0?0:i})
 const done=(i:number)=>!!order.value&&((order.value.status==='Cancelled'||order.value.status==='Refunded')?false:i<=stepIndex.value)
+const statusOptions: Order['status'][]=['Pending','Processing','Shipped','Delivered','Cancelled','Refunded']
+const updateStatus=(e:Event)=>{if(order.value) store.updateOrderStatus(order.value.id,(e.target as HTMLSelectElement).value as Order['status'])}
 </script>
 <template>
 <section class="min-h-[calc(100vh-4rem)] bg-[#f7f7fc] p-5 sm:p-6 lg:p-8"><div v-if="order" class="mx-auto max-w-[1250px]">
 <button @click="router.push('/orders')" class="mb-5 flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-violet-700"><ArrowLeft :size="17"/> Back to orders</button>
-<div class="mb-6 flex flex-wrap items-start justify-between gap-4"><div><p class="text-xs font-bold uppercase tracking-wider text-violet-600">Order details</p><h1 class="mt-1 text-3xl font-extrabold text-slate-950">{{order.id}}</h1><p class="mt-1 text-sm text-slate-500">{{new Date(order.createdAt).toLocaleString('en-IN')}}</p></div><div class="flex gap-2"><span class="rounded-full bg-violet-50 px-3 py-1.5 text-xs font-bold text-violet-700">{{order.status}}</span><span class="rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700">{{order.paymentStatus}}</span></div></div>
+<div class="mb-6 flex flex-wrap items-start justify-between gap-4"><div><p class="text-xs font-bold uppercase tracking-wider text-violet-600">Order details</p><h1 class="mt-1 text-3xl font-extrabold text-slate-950">{{order.id}}</h1><p class="mt-1 text-sm text-slate-500">{{new Date(order.createdAt).toLocaleString('en-IN')}}</p></div><div class="flex flex-wrap gap-2"><select :value="order.status" @change="updateStatus" class="rounded-xl border border-violet-200 bg-white px-3 py-1.5 text-xs font-bold text-violet-700 outline-none focus:ring-4 focus:ring-violet-100"><option v-for="s in statusOptions" :key="s" :value="s">{{s}}</option></select><span class="rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700">{{order.paymentStatus}}</span></div></div>
 <div class="mb-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"><div class="flex items-center justify-between"><div><p class="text-sm font-bold text-slate-800">Fulfillment timeline</p><p class="mt-1 text-xs text-slate-400">Current order progress</p></div><Truck class="text-violet-500"/></div><div class="mt-7 flex items-start"><div v-for="(s,i) in steps" :key="s" class="relative flex-1 text-center"><div v-if="i<steps.length-1" class="absolute left-1/2 top-4 h-1 w-full bg-slate-100"><div :class="done(i+1)?'w-full':'w-0'" class="h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-all duration-700"></div></div><div :class="done(i)?'bg-violet-600 text-white shadow-lg shadow-violet-500/20':'bg-slate-100 text-slate-400'" class="relative mx-auto grid h-8 w-8 place-items-center rounded-full transition-all duration-500"><CheckCircle2 v-if="done(i)" :size="17"/><Circle v-else :size="14"/></div><p class="mt-2 text-xs font-semibold" :class="done(i)?'text-violet-700':'text-slate-400'">{{s}}</p></div></div></div>
 <div class="grid gap-5 lg:grid-cols-[1.5fr_1fr]"><div class="space-y-5">
 <div class="rounded-2xl border border-slate-200 bg-white shadow-sm"><div class="border-b px-6 py-4"><h2 class="font-bold">Items</h2></div><div v-for="item in order.items" :key="item.productId" class="flex items-center justify-between border-b p-5 last:border-0"><div class="flex items-center gap-3"><div class="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-violet-100 to-fuchsia-100 text-violet-600"><Package :size="19"/></div><div><p class="font-semibold">{{product(item.productId)?.name??item.productId}}</p><p class="text-xs text-slate-400">Qty {{item.quantity}} × {{money(item.unitPrice)}}</p></div></div><p class="font-bold">{{money(item.quantity*item.unitPrice)}}</p></div></div>
