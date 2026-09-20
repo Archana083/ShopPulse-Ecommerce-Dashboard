@@ -26,6 +26,14 @@ export const useShopStore = defineStore('shop', {
       const index = this.products.findIndex(p => p.id === id)
       if (index !== -1) this.products[index] = { ...this.products[index], ...changes }
     },
-    archiveProduct(id: string) { this.updateProduct(id, { status: 'Archived' }) }
+    archiveProduct(id: string) { this.updateProduct(id, { status: 'Archived' }) },
+    updateOrderStatus(id: string, status: Order['status']) {
+      const order = this.orders.find(o => o.id === id)
+      if (order) order.status = status
+    },
+    updatePaymentStatus(id: string, status: Order['paymentStatus']) {
+      const order = this.orders.find(o => o.id === id)
+      if (order) order.paymentStatus = status
+    }
   }
 })
