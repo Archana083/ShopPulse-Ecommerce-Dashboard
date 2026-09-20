@@ -4,6 +4,8 @@ import Products from '../pages/Products.vue'
 import Orders from '../pages/Orders.vue'
 import OrderDetails from '../pages/OrderDetails.vue'
 import ProductDetails from '../pages/ProductDetails.vue'
+import Customers from '../pages/Customers.vue'
+import CustomerDetails from '../pages/CustomerDetails.vue'
 import Placeholder from '../pages/Placeholder.vue'
 
 const placeholder = (title: string, description: string) => ({
@@ -19,7 +21,8 @@ export default createRouter({
     { path: '/products/:id', component: ProductDetails },
     { path: '/orders/:id', component: OrderDetails },
     { path: '/orders', component: Orders },
-    { path: '/customers', ...placeholder('Customers', 'Manage customer profiles, segments, lifetime value, and activity.') },
+    { path: '/customers', component: Customers },
+    { path: '/customers/:id', component: CustomerDetails },
     { path: '/categories', ...placeholder('Categories', 'Organize your catalog and monitor category performance.') },
     { path: '/inventory', ...placeholder('Inventory', 'Monitor stock levels, reorder points, and inventory movement.') },
     { path: '/analytics', ...placeholder('Analytics', 'Explore revenue, sales, customer, and product performance.') },
