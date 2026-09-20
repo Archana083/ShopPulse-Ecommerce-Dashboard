@@ -20,15 +20,11 @@ export const useShopStore = defineStore('shop', {
     productById: (state) => (id: string) => state.products.find(p => p.id === id)
   },
   actions: {
-    addProduct(product: Product) {
-      this.products.unshift(product)
-    },
+    addProduct(product: Product) { this.products.unshift(product) },
     updateProduct(id: string, changes: Partial<Product>) {
       const index = this.products.findIndex(p => p.id === id)
       if (index !== -1) this.products[index] = { ...this.products[index], ...changes }
     },
-    archiveProduct(id: string) {
-      this.updateProduct(id, { status: 'Archived' })
-    }
+    archiveProduct(id: string) { this.updateProduct(id, { status: 'Archived' }) }
   }
 })
