@@ -37,8 +37,8 @@ function save() {
 <template>
 <section class="min-h-[calc(100vh-4rem)] bg-[#f7f7fc] px-5 py-6 sm:px-6 lg:px-8">
 <div class="mx-auto max-w-5xl">
-<button @click="router.push('/products')" class="mb-6 flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-violet-700"><ArrowLeft :size="17"/> Back to products</button>
-<div class="mb-7"><div class="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-violet-600"><Package :size="15"/> Catalog</div><h1 class="text-3xl font-bold tracking-tight text-slate-950">{{isEdit?'Edit product':'Add product'}}</h1><p class="mt-1 text-sm text-slate-500">{{isEdit?'Update your catalog information.':'Create a product for your store catalog.'}}</p></div>
+<button @click="router.push('/products')" class="mb-6 flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-orange-700"><ArrowLeft :size="17"/> Back to products</button>
+<div class="mb-7"><div class="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-orange-600"><Package :size="15"/> Catalog</div><h1 class="text-3xl font-bold tracking-tight text-slate-950">{{isEdit?'Edit product':'Add product'}}</h1><p class="mt-1 text-sm text-slate-500">{{isEdit?'Update your catalog information.':'Create a product for your store catalog.'}}</p></div>
 <form @submit.prevent="save" class="space-y-5">
 <div class="card"><h2 class="font-semibold">Basic information</h2><div class="mt-5 grid gap-5 md:grid-cols-2">
 <label class="md:col-span-2"><span class="label">Product name</span><input v-model="form.name" class="field" placeholder="Wireless Headphones"/><span v-if="errors.name" class="error">{{errors.name}}</span></label>
@@ -52,10 +52,10 @@ function save() {
 <label><span class="label">Reorder level</span><input v-model.number="form.reorderLevel" type="number" min="0" class="field"/></label>
 </div></div>
 <div class="card"><h2 class="font-semibold">Publishing</h2><label class="mt-5 block max-w-sm"><span class="label">Status</span><select v-model="form.status" class="field"><option value="Active">Active</option><option value="Draft">Draft</option><option value="Archived">Archived</option></select></label></div>
-<div class="flex justify-end gap-3 pb-6"><button type="button" @click="router.push(isEdit&&editingId?'/products/'+editingId:'/products')" class="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-600">Cancel</button><button type="submit" class="flex items-center gap-2 rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 hover:bg-violet-700"><Save :size="16"/> {{isEdit?'Save changes':'Create product'}}</button></div>
+<div class="flex justify-end gap-3 pb-6"><button type="button" @click="router.push(isEdit&&editingId?'/products/'+editingId:'/products')" class="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-600">Cancel</button><button type="submit" class="flex items-center gap-2 rounded-xl bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 hover:bg-orange-600"><Save :size="16"/> {{isEdit?'Save changes':'Create product'}}</button></div>
 </form></div></section>
 </template>
 <style scoped>
 .card{border:1px solid #e2e8f0;border-radius:1.25rem;background:#fff;padding:1.5rem;box-shadow:0 18px 45px -34px rgba(76,29,149,.5)}
-.label{display:block;margin-bottom:.45rem;font-size:.75rem;font-weight:600;color:#475569}.field{width:100%;border:1px solid #e2e8f0;border-radius:.75rem;padding:.65rem .8rem;font-size:.875rem;outline:none;background:#fff}.field:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,.12)}.error{display:block;margin-top:.35rem;font-size:.75rem;color:#dc2626}
+.label{display:block;margin-bottom:.45rem;font-size:.75rem;font-weight:600;color:#475569}.field{width:100%;border:1px solid #e2e8f0;border-radius:.75rem;padding:.65rem .8rem;font-size:.875rem;outline:none;background:#fff}.field:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(249,115,22,.12)}.error{display:block;margin-top:.35rem;font-size:.75rem;color:#dc2626}
 </style>
