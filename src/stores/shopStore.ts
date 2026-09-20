@@ -17,7 +17,8 @@ export const useShopStore = defineStore('shop', {
     totalOrders: (state) => state.orders.length,
     totalCustomers: (state) => state.customers.length,
     lowStockProducts: (state) => state.products.filter(p => p.stock <= p.reorderLevel),
-    productById: (state) => (id: string) => state.products.find(p => p.id === id)
+    productById: (state) => (id: string) => state.products.find(p => p.id === id),
+    orderById: (state) => (id: string) => state.orders.find(o => o.id === id)
   },
   actions: {
     addProduct(product: Product) { this.products.unshift(product) },
