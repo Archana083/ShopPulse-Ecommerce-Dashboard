@@ -1,0 +1,10 @@
+[
+{"id":"PRD-1001","sku":"SP-ELE-001","name":"Wireless Headphones","categoryId":"cat-electronics","price":2499,"costPrice":1400,"stock":148,"reorderLevel":30,"sales":1842,"rating":4.5,"status":"Active","createdAt":"2026-01-12"},
+{"id":"PRD-1002","sku":"SP-ELE-002","name":"Smart Watch Pro","categoryId":"cat-electronics","price":5999,"costPrice":3500,"stock":72,"reorderLevel":20,"sales":921,"rating":4.4,"status":"Active","createdAt":"2026-02-08"},
+{"id":"PRD-1003","sku":"SP-ELE-003","name":"Bluetooth Speaker","categoryId":"cat-electronics","price":1899,"costPrice":980,"stock":14,"reorderLevel":25,"sales":1254,"rating":4.2,"status":"Active","createdAt":"2026-03-15"},
+{"id":"PRD-2001","sku":"SP-FAS-001","name":"Classic Denim Jacket","categoryId":"cat-fashion","price":3299,"costPrice":1700,"stock":86,"reorderLevel":25,"sales":763,"rating":4.6,"status":"Active","createdAt":"2026-01-21"},
+{"id":"PRD-3001","sku":"SP-HOM-001","name":"Ergonomic Office Chair","categoryId":"cat-home","price":8999,"costPrice":5100,"stock":31,"reorderLevel":10,"sales":418,"rating":4.7,"status":"Active","createdAt":"2026-02-18"},
+{"id":"PRD-4001","sku":"SP-BEA-001","name":"Vitamin C Face Serum","categoryId":"cat-beauty","price":899,"costPrice":380,"stock":9,"reorderLevel":20,"sales":1532,"rating":4.3,"status":"Active","createdAt":"2026-04-03"},
+{"id":"PRD-5001","sku":"SP-SPT-001","name":"Running Shoes","categoryId":"cat-sports","price":4199,"costPrice":2300,"stock":54,"reorderLevel":15,"sales":684,"rating":4.5,"status":"Active","createdAt":"2026-05-10"},
+{"id":"PRD-6001","sku":"SP-BOK-001","name":"JavaScript Mastery","categoryId":"cat-books","price":799,"costPrice":300,"stock":112,"reorderLevel":25,"sales":924,"rating":4.8,"status":"Active","createdAt":"2026-06-01"}
+]
