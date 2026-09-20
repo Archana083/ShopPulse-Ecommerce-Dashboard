@@ -16,6 +16,19 @@ export const useShopStore = defineStore('shop', {
     totalRevenue: (state) => state.orders.reduce((sum, order) => sum + order.total, 0),
     totalOrders: (state) => state.orders.length,
     totalCustomers: (state) => state.customers.length,
-    lowStockProducts: (state) => state.products.filter(p => p.stock <= p.reorderLevel)
+    lowStockProducts: (state) => state.products.filter(p => p.stock <= p.reorderLevel),
+    productById: (state) => (id: string) => state.products.find(p => p.id === id)
+  },
+  actions: {
+    addProduct(product: Product) {
+      this.products.unshift(product)
+    },
+    updateProduct(id: string, changes: Partial<Product>) {
+      const index = this.products.findIndex(p => p.id === id)
+      if (index !== -1) this.products[index] = { ...this.products[index], ...changes }
+    },
+    archiveProduct(id: string) {
+      this.updateProduct(id, { status: 'Archived' })
+    }
   }
 })
