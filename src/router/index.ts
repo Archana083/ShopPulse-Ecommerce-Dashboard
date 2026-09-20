@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../pages/Dashboard.vue'
 import Products from '../pages/Products.vue'
 import Orders from '../pages/Orders.vue'
+import OrderDetails from '../pages/OrderDetails.vue'
 import ProductDetails from '../pages/ProductDetails.vue'
 import ProductForm from '../pages/ProductForm.vue'
 import Placeholder from '../pages/Placeholder.vue'
@@ -19,7 +20,7 @@ export default createRouter({
     { path: '/products/new', component: ProductForm },
     { path: '/products/:id/edit', component: ProductForm },
     { path: '/products/:id', component: ProductDetails },
-    { path: '/orders/:id', component: Placeholder, props: { title: 'Order details', description: 'Detailed order timeline, customer, items, payment and fulfillment information.' } },
+    { path: '/orders/:id', component: OrderDetails },
     { path: '/orders', component: Orders },
     { path: '/customers', ...placeholder('Customers', 'Manage customer profiles, segments, lifetime value, and activity.') },
     { path: '/categories', ...placeholder('Categories', 'Organize your catalog and monitor category performance.') },
