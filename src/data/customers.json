@@ -1,0 +1,7 @@
+[
+{"id":"CUS-1001","name":"Rahul Sharma","email":"rahul@example.com","city":"Mumbai","state":"Maharashtra","country":"India","ordersCount":18,"totalSpent":84520,"segment":"VIP","joinedAt":"2025-01-12"},
+{"id":"CUS-1002","name":"Sneha Patel","email":"sneha@example.com","city":"Ahmedabad","state":"Gujarat","country":"India","ordersCount":9,"totalSpent":32680,"segment":"Returning","joinedAt":"2025-04-21"},
+{"id":"CUS-1003","name":"Amit Verma","email":"amit@example.com","city":"Delhi","state":"Delhi","country":"India","ordersCount":4,"totalSpent":12450,"segment":"Returning","joinedAt":"2026-02-17"},
+{"id":"CUS-1004","name":"Priya Shah","email":"priya@example.com","city":"Pune","state":"Maharashtra","country":"India","ordersCount":1,"totalSpent":1899,"segment":"New","joinedAt":"2026-09-04"},
+{"id":"CUS-1005","name":"Arjun Mehta","email":"arjun@example.com","city":"Bengaluru","state":"Karnataka","country":"India","ordersCount":0,"totalSpent":0,"segment":"Inactive","joinedAt":"2025-08-19"}
+]
