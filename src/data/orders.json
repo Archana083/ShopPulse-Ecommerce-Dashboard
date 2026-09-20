@@ -1,0 +1,6 @@
+[
+{"id":"ORD-10928","customerId":"CUS-1001","items":[{"productId":"PRD-1001","quantity":2,"unitPrice":2499}],"subtotal":4998,"discount":0,"tax":900,"total":5898,"paymentStatus":"Paid","status":"Delivered","paymentMethod":"Card","createdAt":"2026-09-20T10:20:00Z"},
+{"id":"ORD-10927","customerId":"CUS-1002","items":[{"productId":"PRD-1002","quantity":1,"unitPrice":5999}],"subtotal":5999,"discount":500,"tax":990,"total":6489,"paymentStatus":"Paid","status":"Processing","paymentMethod":"UPI","createdAt":"2026-09-20T09:10:00Z"},
+{"id":"ORD-10926","customerId":"CUS-1003","items":[{"productId":"PRD-3001","quantity":1,"unitPrice":8999}],"subtotal":8999,"discount":0,"tax":1620,"total":10619,"paymentStatus":"Paid","status":"Shipped","paymentMethod":"Net Banking","createdAt":"2026-09-19T15:40:00Z"},
+{"id":"ORD-10925","customerId":"CUS-1004","items":[{"productId":"PRD-4001","quantity":2,"unitPrice":899}],"subtotal":1798,"discount":100,"tax":306,"total":2004,"paymentStatus":"Refunded","status":"Refunded","paymentMethod":"UPI","createdAt":"2026-09-19T11:25:00Z"}
+]
