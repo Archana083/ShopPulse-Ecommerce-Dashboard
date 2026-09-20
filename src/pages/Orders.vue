@@ -1,0 +1,35 @@
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { Search, SlidersHorizontal, X, ChevronLeft, ChevronRight, ArrowUpDown, ShoppingBag, ArrowUpRight } from 'lucide-vue-next'
+import { useShopStore } from '../stores/shopStore'
+
+const store=useShopStore()
+const router=useRouter()
+const search=ref(''); const status=ref('All'); const payment=ref('All'); const page=ref(1); const perPage=10
+const filtered=computed(()=>store.orders.filter(o=>{
+ const customer=store.customers.find(c=>c.id===o.customerId)?.name??''
+ return (!search.value||[o.id,customer,o.paymentMethod].some(v=>v.toLowerCase().includes(search.value.toLowerCase()))) &&
+ (status.value==='All'||o.status===status.value)&&(payment.value==='All'||o.paymentStatus===payment.value)
+}).sort((a,b)=>+new Date(b.createdAt)-+new Date(a.createdAt)))
+const totalPages=computed(()=>Math.max(1,Math.ceil(filtered.value.length/perPage)))
+const rows=computed(()=>filtered.value.slice((page.value-1)*perPage,page.value*perPage))
+const money=(n:number)=>'₹'+n.toLocaleString('en-IN')
+const customerName=(id:string)=>store.customers.find(c=>c.id===id)?.name??'Unknown'
+const date=(d:string)=>new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})
+const reset=()=>{search.value='';status.value='All';payment.value='All';page.value=1}
+const hasFilters=computed(()=>!!search.value||status.value!=='All'||payment.value!=='All')
+const changePage=(n:number)=>page.value=Math.min(totalPages.value,Math.max(1,n))
+</script>
+<template>
+<section class="min-h-[calc(100vh-4rem)] bg-[#f7f7fc] p-5 sm:p-6 lg:p-8"><div class="mx-auto max-w-[1500px]">
+<div class="mb-7 flex flex-wrap items-end justify-between gap-4"><div><div class="mb-2 inline-flex items-center gap-2 rounded-full bg-violet-50 px-3 py-1 text-xs font-bold text-violet-700"><ShoppingBag :size="14"/> Fulfillment</div><h1 class="text-3xl font-extrabold tracking-tight text-slate-950">Orders</h1><p class="mt-1 text-sm text-slate-500">Track purchases, payments and fulfillment in one place.</p></div><div class="rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-white shadow-lg shadow-violet-500/20"><p class="text-[11px] font-semibold text-violet-100">ORDER VALUE</p><p class="mt-0.5 text-xl font-extrabold">{{money(store.totalRevenue)}}</p></div></div>
+<div class="mb-4 grid gap-4 sm:grid-cols-3"><div class="stat"><span>Total orders</span><strong>{{store.totalOrders}}</strong></div><div class="stat"><span>Paid orders</span><strong>{{store.orders.filter(o=>o.paymentStatus==='Paid').length}}</strong></div><div class="stat"><span>Processing</span><strong>{{store.orders.filter(o=>o.status==='Processing').length}}</strong></div></div>
+<div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><div class="flex flex-wrap gap-3"><div class="relative min-w-[240px] flex-1"><Search :size="17" class="absolute left-3 top-2.5 text-slate-400"/><input v-model="search" @input="page=1" placeholder="Search order, customer or payment..." class="w-full rounded-xl border border-slate-200 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-violet-400 focus:ring-4 focus:ring-violet-100"/></div><select v-model="status" @change="page=1" class="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm"><option value="All">All statuses</option><option>Pending</option><option>Processing</option><option>Shipped</option><option>Delivered</option><option>Cancelled</option><option>Refunded</option></select><select v-model="payment" @change="page=1" class="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm"><option value="All">All payments</option><option>Paid</option><option>Pending</option><option>Failed</option><option>Refunded</option></select><button v-if="hasFilters" @click="reset" class="flex items-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-sm"><X :size="15"/> Clear</button><button class="rounded-xl border border-slate-200 px-3 py-2"><SlidersHorizontal :size="16"/></button></div></div>
+<div class="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div class="overflow-x-auto"><table class="w-full min-w-[900px] text-left text-sm"><thead class="bg-gradient-to-r from-violet-50/80 to-fuchsia-50/80 text-[11px] uppercase tracking-wider text-slate-500"><tr><th class="px-5 py-3">Order</th><th class="px-5 py-3">Customer</th><th class="px-5 py-3">Date</th><th class="px-5 py-3">Items</th><th class="px-5 py-3">Total</th><th class="px-5 py-3">Payment</th><th class="px-5 py-3">Status</th><th></th></tr></thead><tbody><tr v-for="o in rows" :key="o.id" @click="router.push('/orders/'+o.id)" class="group cursor-pointer border-t border-slate-100 transition hover:bg-violet-50/40"><td class="px-5 py-4"><span class="font-bold text-slate-800 group-hover:text-violet-700">{{o.id}}</span></td><td class="px-5 py-4 font-medium">{{customerName(o.customerId)}}</td><td class="px-5 py-4 text-slate-500">{{date(o.createdAt)}}</td><td class="px-5 py-4 text-slate-500">{{o.items.reduce((s,i)=>s+i.quantity,0)}}</td><td class="px-5 py-4 font-bold">{{money(o.total)}}</td><td class="px-5 py-4"><span :class="o.paymentStatus==='Paid'?'bg-emerald-50 text-emerald-700':o.paymentStatus==='Failed'?'bg-rose-50 text-rose-700':'bg-amber-50 text-amber-700'" class="rounded-full px-2.5 py-1 text-xs font-semibold">{{o.paymentStatus}}</span></td><td class="px-5 py-4"><span class="rounded-full bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-700">{{o.status}}</span></td><td class="px-5 py-4"><ArrowUpRight :size="16" class="text-slate-300 transition group-hover:text-violet-600"/></td></tr><tr v-if="!rows.length"><td colspan="8" class="py-16 text-center text-slate-500">No orders match your filters.</td></tr></tbody></table></div>
+<div class="flex items-center justify-between border-t px-5 py-4"><span class="text-xs text-slate-400">Showing {{filtered.length?((page-1)*perPage+1):0}}–{{Math.min(page*perPage,filtered.length)}} of {{filtered.length}}</span><div class="flex items-center gap-1"><button @click="changePage(page-1)" :disabled="page===1" class="grid h-8 w-8 place-items-center rounded-lg hover:bg-violet-50 disabled:opacity-30"><ChevronLeft :size="16"/></button><button v-for="n in totalPages" :key="n" @click="changePage(n)" :class="['h-8 min-w-8 rounded-lg px-2 text-sm font-medium',page===n?'bg-violet-600 text-white shadow-lg shadow-violet-500/20':'hover:bg-violet-50']">{{n}}</button><button @click="changePage(page+1)" :disabled="page===totalPages" class="grid h-8 w-8 place-items-center rounded-lg hover:bg-violet-50 disabled:opacity-30"><ChevronRight :size="16"/></button></div></div></div>
+</div></section>
+</template>
+<style scoped>
+.stat{border:1px solid #e2e8f0;border-radius:1rem;background:#fff;padding:1rem;transition:all .25s}.stat:hover{transform:translateY(-2px);box-shadow:0 15px 35px -25px rgba(124,58,237,.5)}.stat span{font-size:.75rem;color:#64748b}.stat strong{display:block;margin-top:.3rem;font-size:1.4rem;color:#0f172a}
+</style>
