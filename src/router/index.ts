@@ -4,7 +4,6 @@ import Products from '../pages/Products.vue'
 import Orders from '../pages/Orders.vue'
 import OrderDetails from '../pages/OrderDetails.vue'
 import ProductDetails from '../pages/ProductDetails.vue'
-import ProductForm from '../pages/ProductForm.vue'
 import Placeholder from '../pages/Placeholder.vue'
 
 const placeholder = (title: string, description: string) => ({
@@ -17,8 +16,6 @@ export default createRouter({
   routes: [
     { path: '/', component: Dashboard },
     { path: '/products', component: Products },
-    { path: '/products/new', component: ProductForm },
-    { path: '/products/:id/edit', component: ProductForm },
     { path: '/products/:id', component: ProductDetails },
     { path: '/orders/:id', component: OrderDetails },
     { path: '/orders', component: Orders },
