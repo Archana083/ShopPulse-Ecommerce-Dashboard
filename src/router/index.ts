@@ -9,6 +9,7 @@ import CustomerDetails from '../pages/CustomerDetails.vue'
 import Inventory from '../pages/Inventory.vue'
 import Categories from '../pages/Categories.vue'
 import Analytics from '../pages/Analytics.vue'
+import Reports from '../pages/Reports.vue'
 import Placeholder from '../pages/Placeholder.vue'
 
 const placeholder = (title: string, description: string) => ({
@@ -29,7 +30,7 @@ export default createRouter({
     { path: '/categories', component: Categories },
     { path: '/inventory', component: Inventory },
     { path: '/analytics', component: Analytics },
-    { path: '/reports', ...placeholder('Reports', 'Generate business reports and export operational data.') },
+    { path: '/reports', component: Reports },
     { path: '/settings', ...placeholder('Settings', 'Manage workspace preferences and administration.') }
   ]
 })
