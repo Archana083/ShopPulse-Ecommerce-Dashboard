@@ -8,7 +8,7 @@ const store=useShopStore(); const route=useRoute(); const mobileOpen=ref(false);
 const navGroups=[
  {label:'Overview',items:[{label:'Dashboard',to:'/',icon:LayoutDashboard},{label:'Analytics',to:'/analytics',icon:BarChart3}]},
  {label:'Commerce',items:[{label:'Products',to:'/products',icon:Package},{label:'Orders',to:'/orders',icon:ShoppingCart},{label:'Customers',to:'/customers',icon:Users},{label:'Categories',to:'/categories',icon:Boxes}]},
- {label:'Operations',items:[{label:'Inventory',to:'/inventory',icon:Warehouse},{label:'Reports',to:'/reports',icon:FileBarChart}]}
+ {label:'Operations',items:[{label:'Inventory',to:'/inventory',icon:Warehouse},{label:'Reports',to:'/reports',icon:FileBarChart},{label:'Activity',to:'/activity',icon:Activity}]}
 ]
 const searchResults=computed(()=>store.products.filter(p=>!query.value||[p.name,p.sku,p.id].some(v=>v.toLowerCase().includes(query.value.toLowerCase()))).slice(0,6))
 const pageTitle=computed(()=>route.path==='/'?'Dashboard':route.path.split('/')[1]?.replace(/-/g,' ')||'Workspace')
