@@ -1,0 +1,10 @@
+<script setup lang="ts">
+import { Activity, Clock3, Package, ShoppingCart, Users, Settings2 } from 'lucide-vue-next'
+import { useShopStore } from '../stores/shopStore'
+const store=useShopStore()
+const icon=(type:string)=>type==='order'?ShoppingCart:type==='inventory'?Package:type==='customer'?Users:type==='product'?Settings2:Activity
+</script>
+<template><section class="min-h-[calc(100vh-4rem)] bg-[#f7f7fc] p-5 sm:p-6 lg:p-8"><div class="mx-auto max-w-4xl">
+<div class="mb-7"><div class="mb-2 inline-flex items-center gap-2 rounded-full bg-orange-50 px-3 py-1 text-xs font-bold text-orange-700"><Activity :size="14"/> Audit trail</div><h1 class="text-3xl font-black text-slate-950">Activity</h1><p class="mt-1 text-sm text-slate-500">A chronological view of important workspace events and operational changes.</p></div>
+<div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"><div class="mb-5 flex items-center justify-between"><div><h2 class="font-bold">Recent activity</h2><p class="text-xs text-slate-400">{{store.activities.length}} events recorded</p></div><Clock3 :size="18" class="text-slate-300"/></div><div class="relative"><div class="absolute bottom-3 left-5 top-3 w-px bg-slate-200"/><div v-for="a in store.activities" :key="a.id" class="relative flex gap-4 py-4"><div class="relative z-10 grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-orange-100 bg-orange-50 text-orange-600"><component :is="icon(a.type)" :size="16"/></div><div class="min-w-0 flex-1 rounded-xl border border-slate-100 p-4 transition hover:border-orange-100 hover:bg-orange-50/30"><div class="flex flex-wrap justify-between gap-2"><b class="text-sm">{{a.action}}</b><span class="text-[10px] text-slate-400">{{new Date(a.createdAt).toLocaleString('en-IN')}}</span></div><p class="mt-1 text-xs text-slate-500">{{a.detail}}</p></div></div></div></div>
+</div></section></template>
