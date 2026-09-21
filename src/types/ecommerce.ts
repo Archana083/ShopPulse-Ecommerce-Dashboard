@@ -7,3 +7,6 @@ export interface Product { id:string; sku:string; name:string; categoryId:string
 export interface Customer { id:string; name:string; email:string; city:string; state:string; country:string; ordersCount:number; totalSpent:number; segment:'New'|'Returning'|'VIP'|'Inactive'; joinedAt:string }
 export interface OrderItem { productId:string; quantity:number; unitPrice:number }
 export interface Order { id:string; customerId:string; items:OrderItem[]; subtotal:number; discount:number; tax:number; total:number; paymentStatus:PaymentStatus; status:OrderStatus; paymentMethod:'UPI'|'Card'|'Net Banking'|'COD'|'Wallet'; createdAt:string }
+
+export type StockMovementType = 'Restock' | 'Sale' | 'Adjustment'
+export interface StockMovement { id:string; productId:string; type:StockMovementType; quantity:number; note:string; createdAt:string }
