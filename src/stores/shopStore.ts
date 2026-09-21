@@ -3,14 +3,15 @@ import products from '../data/products.json'
 import customers from '../data/customers.json'
 import orders from '../data/orders.json'
 import categories from '../data/categories.json'
-import type { Product, Customer, Order, Category } from '../types/ecommerce'
+import type { Product, Customer, Order, Category, StockMovement } from '../types/ecommerce'
 
 export const useShopStore = defineStore('shop', {
   state: () => ({
     products: products as Product[],
     customers: customers as Customer[],
     orders: orders as Order[],
-    categories: categories as Category[]
+    categories: categories as Category[],
+    stockMovements: [] as StockMovement[]
   }),
   getters: {
     totalRevenue: (state) => state.orders.reduce((sum, order) => sum + order.total, 0),
@@ -27,6 +28,13 @@ export const useShopStore = defineStore('shop', {
       if (index !== -1) this.products[index] = { ...this.products[index], ...changes }
     },
     archiveProduct(id: string) { this.updateProduct(id, { status: 'Archived' }) },
+    adjustStock(productId: string, quantity: number, note = 'Manual stock adjustment') {
+      const product = this.products.find(p => p.id === productId)
+      if (!product || quantity === 0 || product.stock + quantity < 0) return false
+      product.stock += quantity
+      this.stockMovements.unshift({ id: `MOV-${Date.now()}`, productId, type: quantity > 0 ? 'Restock' : 'Adjustment', quantity: Math.abs(quantity), note, createdAt: new Date().toISOString() })
+      return true
+    },
     updateOrderStatus(id: string, status: Order['status']) {
       const order = this.orders.find(o => o.id === id)
       if (order) order.status = status
