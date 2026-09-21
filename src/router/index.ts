@@ -11,6 +11,8 @@ import Categories from '../pages/Categories.vue'
 import Analytics from '../pages/Analytics.vue'
 import Reports from '../pages/Reports.vue'
 import Placeholder from '../pages/Placeholder.vue'
+import Settings from '../pages/Settings.vue'
+import Activity from '../pages/Activity.vue'
 
 const placeholder = (title: string, description: string) => ({
   component: Placeholder,
@@ -31,6 +33,8 @@ export default createRouter({
     { path: '/inventory', component: Inventory },
     { path: '/analytics', component: Analytics },
     { path: '/reports', component: Reports },
-    { path: '/settings', ...placeholder('Settings', 'Manage workspace preferences and administration.') }
+    { path: '/activity', component: Activity },
+    { path: '/settings', component: Settings },
+    
   ]
 })
