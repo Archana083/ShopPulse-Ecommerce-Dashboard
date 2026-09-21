@@ -22,6 +22,9 @@ export const useShopStore = defineStore('shop', {
     orderById: (state) => (id: string) => state.orders.find(o => o.id === id)
   },
   actions: {
+    addCategory(category: Category) { this.categories.unshift(category) },
+    updateCategory(id: string, changes: Partial<Category>) { const i=this.categories.findIndex(c=>c.id===id); if(i!==-1) this.categories[i]={...this.categories[i],...changes} },
+    deleteCategory(id: string) { if(this.products.some(p=>p.categoryId===id)) return false; this.categories=this.categories.filter(c=>c.id!==id); return true },
     addProduct(product: Product) { this.products.unshift(product) },
     updateProduct(id: string, changes: Partial<Product>) {
       const index = this.products.findIndex(p => p.id === id)
