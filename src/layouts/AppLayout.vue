@@ -1,49 +1,44 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { RouterLink, RouterView } from 'vue-router'
-import { BarChart3, Bell, ChevronDown, LayoutDashboard, Menu, Package, Users, ShoppingCart, Boxes, FileBarChart, Settings, X } from 'lucide-vue-next'
+import { computed, ref } from 'vue'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { BarChart3, Bell, ChevronDown, LayoutDashboard, Menu, Package, Users, ShoppingCart, Boxes, FileBarChart, Settings, X, Search, Command, Activity, Warehouse } from 'lucide-vue-next'
+import { useShopStore } from '../stores/shopStore'
 
-const mobileOpen = ref(false)
-const navItems = [
-  { label:'Dashboard', to:'/', icon:LayoutDashboard },
-  { label:'Products', to:'/products', icon:Package },
-  { label:'Orders', to:'/orders', icon:ShoppingCart },
-  { label:'Customers', to:'/customers', icon:Users },
-  { label:'Categories', to:'/categories', icon:Boxes },
-  { label:'Inventory', to:'/inventory', icon:Package },
-  { label:'Analytics', to:'/analytics', icon:BarChart3 },
-  { label:'Reports', to:'/reports', icon:FileBarChart },
+const store=useShopStore(); const route=useRoute(); const mobileOpen=ref(false); const notificationsOpen=ref(false); const searchOpen=ref(false); const query=ref('')
+const navGroups=[
+ {label:'Overview',items:[{label:'Dashboard',to:'/',icon:LayoutDashboard},{label:'Analytics',to:'/analytics',icon:BarChart3}]},
+ {label:'Commerce',items:[{label:'Products',to:'/products',icon:Package},{label:'Orders',to:'/orders',icon:ShoppingCart},{label:'Customers',to:'/customers',icon:Users},{label:'Categories',to:'/categories',icon:Boxes}]},
+ {label:'Operations',items:[{label:'Inventory',to:'/inventory',icon:Warehouse},{label:'Reports',to:'/reports',icon:FileBarChart}]}
 ]
+const searchResults=computed(()=>store.products.filter(p=>!query.value||[p.name,p.sku,p.id].some(v=>v.toLowerCase().includes(query.value.toLowerCase()))).slice(0,6))
+const pageTitle=computed(()=>route.path==='/'?'Dashboard':route.path.split('/')[1]?.replace(/-/g,' ')||'Workspace')
+const closeMobile=()=>mobileOpen.value=false
 </script>
-
 <template>
-  <div class="min-h-screen bg-[#f7f7fc] text-slate-900">
-    <div v-if="mobileOpen" class="fixed inset-0 z-40 bg-slate-950/40 lg:hidden" @click="mobileOpen=false" />
-    <aside :class="['fixed inset-y-0 left-0 z-50 w-64 border-r border-slate-200 bg-white transition-transform duration-200', mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0']">
-      <div class="flex h-16 items-center justify-between border-b px-5">
-        <div class="flex items-center gap-3"><div class="grid h-9 w-9 place-items-center rounded-xl bg-orange-500 text-sm font-bold text-white shadow-lg shadow-violet-500/20">S</div><span class="text-lg font-extrabold tracking-tight">ShopPulse</span></div>
-        <button class="rounded-lg p-2 hover:bg-orange-50 hover:text-orange-600 lg:hidden" @click="mobileOpen=false"><X :size="18"/></button>
-      </div>
-      <div class="px-4 pt-5"><p class="px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400">Workspace</p>
-        <nav class="mt-2 space-y-1">
-          <RouterLink v-for="item in navItems" :key="item.to" :to="item.to" @click="mobileOpen=false" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-600 hover:bg-orange-50 [&.router-link-exact-active]:bg-orange-500 [&.router-link-exact-active]:font-semibold [&.router-link-exact-active]:text-white [&.router-link-exact-active]:shadow-lg [&.router-link-exact-active]:shadow-orange-500/20">
-            <component :is="item.icon" :size="18"/><span>{{item.label}}</span>
-          </RouterLink>
-        </nav>
-      </div>
-      <div class="absolute bottom-0 w-full border-t p-4"><RouterLink to="/settings" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-600 hover:bg-slate-100"><Settings :size="18"/>Settings</RouterLink></div>
-    </aside>
-
-    <div class="lg:pl-64">
-      <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-4 backdrop-blur sm:px-6">
-        <button @click="mobileOpen=true" class="rounded-lg p-2 hover:bg-slate-100 lg:hidden"><Menu :size="20"/></button>
-        <div class="hidden text-sm text-slate-500 lg:block">E-commerce Management</div>
-        <div class="ml-auto flex items-center gap-2 sm:gap-4">
-          <button class="relative rounded-lg p-2 text-slate-500 hover:bg-slate-100"><Bell :size="19"/><span class="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-slate-900"/></button>
-          <div class="flex items-center gap-2 border-l pl-3 sm:pl-4"><div class="grid h-8 w-8 place-items-center rounded-full bg-slate-200 text-xs font-bold">AM</div><div class="hidden sm:block"><p class="text-sm font-medium">Admin</p><p class="text-[11px] text-slate-400">Administrator</p></div><ChevronDown :size="16" class="text-slate-400"/></div>
-        </div>
-      </header>
-      <main><RouterView /></main>
-    </div>
+<div class="min-h-screen bg-[#f7f7fc] text-slate-900">
+ <div v-if="mobileOpen" class="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-sm lg:hidden" @click="closeMobile"/>
+ <aside :class="['fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200 bg-white transition-transform duration-200',mobileOpen?'translate-x-0':'-translate-x-full lg:translate-x-0']">
+  <div class="flex h-16 shrink-0 items-center justify-between border-b px-5">
+   <div class="flex items-center gap-3"><div class="grid h-9 w-9 place-items-center rounded-xl bg-orange-500 text-sm font-black text-white shadow-lg shadow-orange-500/20">S</div><div><span class="block text-lg font-black tracking-tight">ShopPulse</span><span class="block text-[9px] font-bold uppercase tracking-[.18em] text-slate-400">Commerce OS</span></div></div>
+   <button class="rounded-lg p-2 hover:bg-orange-50 lg:hidden" @click="closeMobile"><X :size="18"/></button>
   </div>
+  <div class="border-b border-slate-100 px-4 py-4"><button @click="searchOpen=true" class="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-left text-xs text-slate-400 transition hover:border-orange-200 hover:bg-white"><span class="flex items-center gap-2"><Search :size="15"/>Search catalog...</span><kbd class="hidden rounded bg-white px-1.5 py-0.5 font-mono text-[9px] shadow-sm sm:block">⌘ K</kbd></button></div>
+  <nav class="flex-1 overflow-y-auto px-4 py-4">
+   <div v-for="group in navGroups" :key="group.label" class="mb-6"><p class="px-3 text-[10px] font-bold uppercase tracking-[.16em] text-slate-400">{{group.label}}</p><div class="mt-2 space-y-1"><RouterLink v-for="item in group.items" :key="item.to" :to="item.to" @click="closeMobile" class="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-orange-50 hover:text-orange-700 [&.router-link-exact-active]:bg-orange-500 [&.router-link-exact-active]:font-semibold [&.router-link-exact-active]:text-white [&.router-link-exact-active]:shadow-lg [&.router-link-exact-active]:shadow-orange-500/20"><component :is="item.icon" :size="18" class="transition group-hover:scale-105"/><span>{{item.label}}</span></RouterLink></div></div>
+  </nav>
+  <div class="border-t border-slate-100 p-4"><RouterLink to="/settings" @click="closeMobile" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50"><Settings :size="18"/>Settings</RouterLink><div class="mt-3 flex items-center gap-3 rounded-xl bg-slate-50 p-3"><div class="grid h-9 w-9 place-items-center rounded-full bg-orange-100 text-xs font-black text-orange-700">AM</div><div class="min-w-0"><p class="truncate text-xs font-bold">Admin</p><p class="truncate text-[10px] text-slate-400">Store administrator</p></div></div></div>
+ </aside>
+ <div class="lg:pl-64">
+  <header class="sticky top-0 z-30 flex h-16 items-center border-b border-slate-200 bg-white/85 px-4 backdrop-blur-xl sm:px-6">
+   <div class="flex min-w-0 items-center gap-3"><button @click="mobileOpen=true" class="rounded-lg p-2 hover:bg-slate-100 lg:hidden"><Menu :size="20"/></button><div class="hidden lg:block"><p class="text-[10px] font-bold uppercase tracking-[.16em] text-slate-400">Workspace</p><p class="text-sm font-bold capitalize">{{pageTitle}}</p></div></div>
+   <div class="ml-auto flex items-center gap-2">
+    <button @click="searchOpen=true" class="hidden items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-xs text-slate-400 transition hover:border-orange-200 md:flex"><Search :size="15"/> Search products <kbd class="rounded bg-slate-50 px-1.5 py-0.5 font-mono">⌘K</kbd></button>
+    <div class="relative"><button @click="notificationsOpen=!notificationsOpen" class="relative rounded-xl p-2.5 text-slate-500 transition hover:bg-orange-50 hover:text-orange-600"><Bell :size="19"/><span v-if="store.unreadNotifications" class="absolute right-1.5 top-1.5 grid min-h-4 min-w-4 place-items-center rounded-full bg-orange-500 px-1 text-[8px] font-bold text-white">{{store.unreadNotifications}}</span></button><div v-if="notificationsOpen" class="absolute right-0 top-12 w-80 rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl"><div class="flex items-center justify-between px-2 py-2"><div><p class="font-bold">Notifications</p><p class="text-xs text-slate-400">{{store.unreadNotifications}} unread</p></div><button @click="store.markAllNotificationsRead" class="text-xs font-semibold text-orange-600">Mark all read</button></div><button v-for="n in store.notifications" :key="n.id" @click="store.markNotificationRead(n.id)" class="mt-1 flex w-full gap-3 rounded-xl p-3 text-left transition hover:bg-orange-50"><span :class="n.read?'bg-slate-100 text-slate-400':'bg-orange-100 text-orange-600'" class="grid h-8 w-8 shrink-0 place-items-center rounded-lg"><Bell :size="14"/></span><span><strong class="block text-xs">{{n.title}}</strong><small class="mt-0.5 block text-[11px] text-slate-500">{{n.detail}}</small></span></button></div></div>
+    <div class="hidden h-8 w-px bg-slate-200 sm:block"></div><div class="flex items-center gap-2"><div class="grid h-8 w-8 place-items-center rounded-full bg-orange-100 text-xs font-black text-orange-700">AM</div><div class="hidden sm:block"><p class="text-xs font-bold">Admin</p><p class="text-[10px] text-slate-400">Administrator</p></div><ChevronDown :size="15" class="text-slate-400"/></div>
+   </div>
+  </header>
+  <main><RouterView v-slot="{Component}"><Transition name="page" mode="out-in"><component :is="Component"/></Transition></RouterView></main>
+ </div>
+ <div v-if="searchOpen" class="fixed inset-0 z-[70] bg-slate-950/40 p-4 backdrop-blur-sm" @click.self="searchOpen=false"><div class="mx-auto mt-[10vh] w-full max-w-2xl overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl"><div class="flex items-center gap-3 border-b p-5"><Command :size="19" class="text-orange-500"/><input v-model="query" autofocus placeholder="Search products, SKU or ID..." class="w-full text-base outline-none"/><button @click="searchOpen=false"><X :size="19"/></button></div><div class="max-h-[55vh] overflow-y-auto p-3"><button v-for="p in searchResults" :key="p.id" @click="$router.push('/products/'+p.id);searchOpen=false" class="flex w-full items-center justify-between rounded-2xl p-4 text-left transition hover:bg-orange-50"><span><strong class="block text-sm">{{p.name}}</strong><small class="text-xs text-slate-400">{{p.sku}} · {{p.stock}} in stock</small></span><span class="text-sm font-bold text-orange-600">₹{{p.price.toLocaleString('en-IN')}}</span></button><p v-if="!searchResults.length" class="py-12 text-center text-sm text-slate-400">No products found.</p></div></div></div>
+</div>
 </template>
