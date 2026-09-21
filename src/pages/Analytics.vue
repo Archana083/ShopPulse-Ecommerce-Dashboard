@@ -10,11 +10,13 @@ const delivered=computed(()=>orders.value.filter(o=>o.status==='Delivered').leng
 const deliveredRate=computed(()=>orders.value.length?delivered.value/orders.value.length*100:0)
 const money=(n:number)=>'₹'+Math.round(n).toLocaleString('en-IN')
 const productSales=computed(()=>{const totals=new Map<string,number>();orders.value.forEach(o=>o.items.forEach(i=>totals.set(i.productId,(totals.get(i.productId)||0)+i.quantity*i.unitPrice)));return store.products.map(p=>({name:p.name,revenue:totals.get(p.id)||0})).filter(p=>p.revenue>0).sort((a,b)=>b.revenue-a.revenue).slice(0,8)})
-const categoryStats=computed(()=>store.categories.map(c=>{const totals=store.products.filter(p=>p.categoryId===c.id).reduce((s,p)=>s+(productSales.value.find(x=>x.name===p.name)?.revenue||0),0);return {name:c.name,revenue:totals}}).filter(c=>c.revenue>0).sort((a,b)=>b.revenue-a.revenue))
+const categoryStats=computed(()=>{const totals=new Map<string,number>();orders.value.forEach(o=>o.items.forEach(i=>{const p=store.products.find(p=>p.id===i.productId);if(p)totals.set(p.categoryId,(totals.get(p.categoryId)||0)+i.quantity*i.unitPrice)}));return store.categories.map(c=>({name:c.name,revenue:totals.get(c.id)||0})).filter(c=>c.revenue>0).sort((a,b)=>b.revenue-a.revenue)})
 const paymentStats=computed(()=>['Paid','Pending','Failed','Refunded'].map(s=>({name:s,count:orders.value.filter(o=>o.paymentStatus===s).length})))
 const statusStats=computed(()=>['Delivered','Shipped','Processing','Pending','Cancelled','Refunded'].map(s=>({name:s,count:orders.value.filter(o=>o.status===s).length})))
 const maxRevenue=computed(()=>Math.max(...categoryStats.value.map(x=>x.revenue),1))
 const maxProductRevenue=computed(()=>Math.max(...productSales.value.map(x=>x.revenue),1))
+const cancelledRate=computed(()=>orders.value.length?orders.value.filter(o=>o.status==='Cancelled').length/orders.value.length*100:0)
+const paidRate=computed(()=>orders.value.length?orders.value.filter(o=>o.paymentStatus==='Paid').length/orders.value.length*100:0)
 </script>
 <template>
 <section class="min-h-[calc(100vh-4rem)] bg-[#f7f7fc] p-5 sm:p-6 lg:p-8"><div class="mx-auto max-w-[1500px]">
