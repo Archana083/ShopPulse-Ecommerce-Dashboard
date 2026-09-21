@@ -3,19 +3,21 @@ import { computed, ref } from 'vue'
 import { ArrowUpRight, AlertTriangle, DollarSign, Package, ShoppingCart, Sparkles, TrendingUp, Users, Clock3, Activity, ExternalLink } from 'lucide-vue-next'
 import { useShopStore } from '../stores/shopStore'
 const store=useShopStore(); const period=ref('Last 30 days')
+const now=Date.now()
+const scopedOrders=computed(()=>{const days=period.value==='Today'?1:period.value==='Last 7 days'?7:period.value==='Last 30 days'?30:null;return store.orders.filter(o=>!days||now-new Date(o.createdAt).getTime()<=days*86400000)})
 const money=(n:number)=>'₹'+Math.round(n).toLocaleString('en-IN')
 const stats=computed(()=>[
- {label:'Gross revenue',value:money(store.totalRevenue),change:'+12.8%',icon:DollarSign,detail:'vs previous period'},
- {label:'Orders',value:store.totalOrders.toLocaleString('en-IN'),change:'+8.4%',icon:ShoppingCart,detail:'all channels'},
+ {label:'Gross revenue',value:money(scopedOrders.value.reduce((s,o)=>s+o.total,0)),change:'+12.8%',icon:DollarSign,detail:'vs previous period'},
+ {label:'Orders',value:scopedOrders.value.length.toLocaleString('en-IN'),change:'+8.4%',icon:ShoppingCart,detail:'all channels'},
  {label:'Customers',value:store.totalCustomers.toLocaleString('en-IN'),change:'+5.7%',icon:Users,detail:'registered accounts'},
  {label:'Inventory risk',value:store.lowStockProducts.length.toString(),change:'Needs attention',icon:Package,detail:'below reorder level',warn:true}
 ])
-const recentOrders=computed(()=>[...store.orders].sort((a,b)=>+new Date(b.createdAt)-+new Date(a.createdAt)).slice(0,7))
+const recentOrders=computed(()=>[...scopedOrders.value].sort((a,b)=>+new Date(b.createdAt)-+new Date(a.createdAt)).slice(0,7))
 const customerName=(id:string)=>store.customers.find(c=>c.id===id)?.name??'Unknown'
 const topProducts=computed(()=>[...store.products].sort((a,b)=>b.sales-a.sales).slice(0,5))
 const monthlyRevenue=[42000,51000,47000,62000,58000,71000,68000,79000,74000,86000,82000,94000]
 const monthLabels=['Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep']
-const orderMix=computed(()=>['Delivered','Processing','Shipped','Pending'].map(label=>({label,value:store.orders.filter(o=>o.status===label).length})))
+const orderMix=computed(()=>['Delivered','Processing','Shipped','Pending'].map(label=>({label,value:scopedOrders.value.filter(o=>o.status===label).length})))
 const maxOrders=computed(()=>Math.max(...orderMix.value.map(x=>x.value),1))
 const statusClass=(s:string)=>s==='Delivered'?'bg-emerald-50 text-emerald-700':s==='Cancelled'||s==='Refunded'?'bg-rose-50 text-rose-700':s==='Shipped'?'bg-blue-50 text-blue-700':'bg-orange-50 text-orange-700'
 </script>
