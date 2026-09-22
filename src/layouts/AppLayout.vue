@@ -5,7 +5,20 @@ import { BarChart3, Bell, ChevronDown, LayoutDashboard, Menu, Package, Users, Sh
 import { useShopStore } from '../stores/shopStore'
 import { useAuthStore } from '../stores/authStore'
 
-const store=useShopStore(); const auth=useAuthStore(); const route=useRoute(); const router=useRouter(); const mobileOpen=ref(false); const notificationsOpen=ref(false); const searchOpen=ref(false); const profileOpen=ref(false); const query=ref('')\nconst displayName=computed(()=>auth.user?.name || 'Admin')\nconst displayEmail=computed(()=>auth.user?.email || 'admin@shoppulse.com')\nconst displayRole=computed(()=>auth.user?.role || 'Administrator')\nconst initials=computed(()=>displayName.value.split(' ').map(v=>v[0]).join('').slice(0,2).toUpperCase())\nconst logout=()=>{ auth.logout(); profileOpen.value=false; router.push('/login') }
+const store = useShopStore()
+const auth = useAuthStore()
+const route = useRoute()
+const router = useRouter()
+const mobileOpen = ref(false)
+const notificationsOpen = ref(false)
+const searchOpen = ref(false)
+const profileOpen = ref(false)
+const query = ref('')
+const displayName = computed(() => auth.user?.name || 'Admin')
+const displayEmail = computed(() => auth.user?.email || 'admin@shoppulse.com')
+const displayRole = computed(() => auth.user?.role || 'Administrator')
+const initials = computed(() => displayName.value.split(' ').map(v => v[0]).join('').slice(0, 2).toUpperCase())
+const logout = () => { auth.logout(); profileOpen.value = false; router.push('/login') }
 const navGroups=[
  {label:'Overview',items:[{label:'Dashboard',to:'/',icon:LayoutDashboard},{label:'Analytics',to:'/analytics',icon:BarChart3}]},
  {label:'Commerce',items:[{label:'Products',to:'/products',icon:Package},{label:'Orders',to:'/orders',icon:ShoppingCart},{label:'Customers',to:'/customers',icon:Users},{label:'Categories',to:'/categories',icon:Boxes}]},
