@@ -13,28 +13,41 @@ import Reports from '../pages/Reports.vue'
 import Placeholder from '../pages/Placeholder.vue'
 import Settings from '../pages/Settings.vue'
 import Activity from '../pages/Activity.vue'
+import Login from '../pages/auth/Login.vue'
+import Register from '../pages/auth/Register.vue'
+import ForgotPassword from '../pages/auth/ForgotPassword.vue'
+import { useAuthStore } from '../stores/authStore'
 
 const placeholder = (title: string, description: string) => ({
   component: Placeholder,
   props: { title, description }
 })
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', component: Dashboard },
-    { path: '/products', component: Products },
+    { path: '/login', component: Login, meta: { public: true } },
+    { path: '/register', component: Register, meta: { public: true } },
+    { path: '/forgot-password', component: ForgotPassword, meta: { public: true } },
+    { path: '/', component: Dashboard, meta: { requiresAuth: true } },
+    { path: '/products', meta: { requiresAuth: true }, component: Products },
     { path: '/products/:id', component: ProductDetails },
-    { path: '/orders/:id', component: OrderDetails },
-    { path: '/orders', component: Orders },
-    { path: '/customers', component: Customers },
-    { path: '/customers/:id', component: CustomerDetails },
-    { path: '/categories', component: Categories },
-    { path: '/inventory', component: Inventory },
-    { path: '/analytics', component: Analytics },
-    { path: '/reports', component: Reports },
-    { path: '/activity', component: Activity },
-    { path: '/settings', component: Settings },
+    { path: '/orders/:id', meta: { requiresAuth: true }, component: OrderDetails },
+    { path: '/orders', meta: { requiresAuth: true }, component: Orders },
+    { path: '/customers', meta: { requiresAuth: true }, component: Customers },
+    { path: '/customers/:id', meta: { requiresAuth: true }, component: CustomerDetails },
+    { path: '/categories', meta: { requiresAuth: true }, component: Categories },
+    { path: '/inventory', meta: { requiresAuth: true }, component: Inventory },
+    { path: '/analytics', meta: { requiresAuth: true }, component: Analytics },
+    { path: '/reports', meta: { requiresAuth: true }, component: Reports },
+    { path: '/activity', meta: { requiresAuth: true }, component: Activity },
+    { path: '/settings', component: Settings, meta: { requiresAuth: true } },
     
   ]
+})
+
+router.beforeEach((to) => {
+  const auth = useAuthStore()
+  if (to.meta.requiresAuth && !auth.isAuthenticated) return '/login'
+  if (to.meta.public && auth.isAuthenticated && to.path !== '/forgot-password') return '/'
 })
