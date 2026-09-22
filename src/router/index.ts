@@ -31,7 +31,7 @@ const router = createRouter({
     { path: '/forgot-password', component: ForgotPassword, meta: { public: true } },
     { path: '/', component: Dashboard, meta: { requiresAuth: true } },
     { path: '/products', meta: { requiresAuth: true }, component: Products },
-    { path: '/products/:id', component: ProductDetails },
+    { path: '/products/:id', meta: { requiresAuth: true }, component: ProductDetails },
     { path: '/orders/:id', meta: { requiresAuth: true }, component: OrderDetails },
     { path: '/orders', meta: { requiresAuth: true }, component: Orders },
     { path: '/customers', meta: { requiresAuth: true }, component: Customers },
@@ -51,3 +51,5 @@ router.beforeEach((to) => {
   if (to.meta.requiresAuth && !auth.isAuthenticated) return '/login'
   if (to.meta.public && auth.isAuthenticated && to.path !== '/forgot-password') return '/'
 })
+
+export default router
